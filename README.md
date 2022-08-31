@@ -15,4 +15,4 @@ A simple performance collection tool to determine the performance of a GPU enabl
    3. `training-logs.json`
 
 ## Teardown
-The training operation should run as long as you'd like as this is just a method of measuring performance. Once you've run the process long enough, you can kill the containers with `docker compose down` or `ctrl+c` if you're still in teh same terminal.  
+The training operation should run as long as you'd like as this is just a method of measuring performance. Once you've run the process long enough, you can kill the containers with `docker compose down` or `ctrl+c` if you're still in the same terminal.  
