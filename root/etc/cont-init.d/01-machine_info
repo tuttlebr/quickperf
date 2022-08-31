@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+shopt -s extglob;
+LOG_FILENAME=$(date +%Y-%m-%d_%H-%M)
+nvidia-smi -q -x -f "/workspace/gpu-info.xml"

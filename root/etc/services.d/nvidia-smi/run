@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+LOG_FILENAME=$(date +%Y-%m-%d_%H-%M)
+
+exec \
+	s6-setuidgid root \
+                nvidia-smi --query-gpu=index,timestamp,utilization.gpu,power.draw,clocks.gr,clocks.video,temperature.gpu,pstate,clocks_throttle_reasons.hw_thermal_slowdown,clocks_throttle_reasons.sw_thermal_slowdown,clocks_throttle_reasons.hw_slowdown,clocks_throttle_reasons.sw_power_cap,utilization.memory,memory.total,memory.free,memory.used,clocks_throttle_reasons.active \
+                --format=csv \
+                --loop=5  > "/workspace/gpu-query.csv"

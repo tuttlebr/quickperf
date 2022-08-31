@@ -1,0 +1,61 @@
+services:
+  convnets:
+    build:
+      args:
+        - FROM_IMAGE_NAME=nvcr.io/nvaie/pytorch-2-2:22.07-nvaie-2.2-py3
+      context: https://github.com/NVIDIA/DeepLearningExamples.git#master:PyTorch/Classification/ConvNets
+      dockerfile: Dockerfile
+    image: quickperf:convnets
+    shm_size: 8gb
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    runtime: "nvidia"
+    entrypoint:
+      [
+        "python",
+        "./multiproc.py",
+        "--nproc_per_node=1",
+        "./main.py",
+        "/imagenet",
+        "--arch=resnet50",
+        "--workers=16",
+        "--epochs=10",
+        "--batch-size=256",
+        "--optimizer-batch-size=2048",
+        "--learning-rate=2.048",
+        "--lr-schedule=cosine",
+        "--warmup=8",
+        "--label-smoothing=0.1",
+        "--optimizer=sgd",
+        "--momentum=0.875",
+        "--weight-decay=3.0517578125e-05",
+        "--print-freq=100",
+        "--amp",
+        "--static-loss-scale=128",
+        "--prof=1000",
+        "--seed=42",
+        "--raport-file=/tmp/training-logs.json",
+        "--no-checkpoints",
+        "--workspace=/workspace",
+        "--training-only",
+        "--data-backend=synthetic",
+      ]
+    volumes:
+      - type: bind
+        source: logs/
+        target: /tmp/
+
+  nvidia-smi:
+    build:
+      args:
+        - FROM_IMAGE_NAME=nvcr.io/nvaie/pytorch-2-2:22.07-nvaie-2.2-py3
+      context: .
+    image: quickperf:logger
+    runtime: "nvidia"
+    depends_on:
+      - convnets
+    volumes:
+      - type: bind
+        source: logs/
+        target: /workspace/
